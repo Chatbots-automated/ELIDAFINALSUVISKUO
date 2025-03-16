@@ -63,7 +63,7 @@ export default function Home() {
               transition={{ delay: 0.3, duration: 0.5 }}
               className="inline-block px-5 py-2 bg-elida-gold/20 backdrop-blur-sm text-elida-gold rounded-full text-sm font-medium mb-8 shimmer tracking-wider uppercase"
             >
-              Soliariumų studija Panevėžyje
+              Soliariumo studija Panevėžyje
             </motion.span>
             <motion.h1 
               initial={{ opacity: 0, y: 30 }}
@@ -87,7 +87,7 @@ export default function Home() {
                 className="h-12 brightness-0 invert"
               />
               <span className="text-xl text-elida-beige">
-                - šiuolaikiška vieta Jūsų tobulam įdegiui
+                - šiuolaikiška vieta tobulam įdegiui
               </span>
             </motion.div>
             <motion.div 
