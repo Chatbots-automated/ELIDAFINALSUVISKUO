@@ -22,7 +22,7 @@ export default function Services() {
         "Aqua vandens dulksna",
         "Aroma terapija"
       ],
-      price: "0.70€/min",
+      price: "0.80€/min",
       image: "https://i.imgur.com/BglgqEp.jpeg"
     },
     {
@@ -37,7 +37,7 @@ export default function Services() {
         "Balso gidas",
         "Kokybiška garso sistema"
       ],
-      price: "0.70€/min",
+      price: "0.80€/min",
       image: "https://i.imgur.com/BfJvZrr.jpeg"
     },
     {
@@ -71,7 +71,6 @@ export default function Services() {
               Mūsų Paslaugos
             </h1>
             <p className="text-lg text-gray-600 mb-8">
-              Atraskite aukščiausios kokybės įdegio paslaugas su modernia įranga ir profesionaliu aptarnavimu
             </p>
           </motion.div>
         </div>

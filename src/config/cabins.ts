@@ -7,7 +7,7 @@ export const cabins: Cabin[] = [
     type: 'lying',
     description: 'Modernus gulimas soliariumas su pažangia vėdinimo sistema ir komfortiška temperatūra.',
     image: 'https://i.imgur.com/xGtSKlR.jpeg',
-    pricePerMinute: 0.70
+    pricePerMinute: 0.80
   },
   {
     id: 'standing-1',
@@ -15,7 +15,7 @@ export const cabins: Cabin[] = [
     type: 'standing',
     description: 'Vertikalus soliariumas su purškimo funkcija ir gaiviu vėdinimu.',
     image: 'https://i.imgur.com/BfJvZrr.jpeg',
-    pricePerMinute: 0.70
+    pricePerMinute: 0.80
   },
   {
     id: 'lying-2',
@@ -23,6 +23,6 @@ export const cabins: Cabin[] = [
     type: 'lying',
     description: 'Aukščiausios klasės gulima kabina su aromoterapija ir valdoma muzika',
     image: 'https://i.imgur.com/BglgqEp.jpeg',
-    pricePerMinute: 0.70
+    pricePerMinute: 0.80
   }
 ];
