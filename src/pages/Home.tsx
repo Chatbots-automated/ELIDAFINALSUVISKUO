@@ -1,10 +1,27 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Sun, Users, Clock, Sparkles, ChevronDown, Star, CreditCard, Quote, User } from 'lucide-react';
+import { Sun, Users, Clock, Sparkles, ChevronDown, Star, CreditCard, Quote, User, Calendar, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import FeaturedProducts from '../components/FeaturedProducts';
+import { fetchNews } from '../services/newsService';
+import type { NewsItem } from '../services/newsService';
+import { format } from 'date-fns';
+import { lt } from 'date-fns/locale';
 
 export default function Home() {
+  const [news, setNews] = useState<NewsItem[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadNews = async () => {
+      const newsData = await fetchNews();
+      setNews(newsData);
+      setLoading(false);
+    };
+
+    loadNews();
+  }, []);
+
   const fadeIn = {
     initial: { opacity: 0, y: 20 },
     animate: { opacity: 1, y: 0 },
@@ -294,6 +311,74 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* News Section */}
+      {news.length > 0 && (
+        <section className="py-24 bg-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="text-center mb-16"
+            >
+              <h2 className="font-playfair text-4xl text-gray-900 mb-6">
+                Naujienos
+              </h2>
+              <div className="w-32 h-1 bg-gradient-to-r from-elida-gold to-elida-accent mx-auto"></div>
+            </motion.div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {news.map((item, index) => (
+                <motion.article
+                  key={item.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                  className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300"
+                >
+                  {item.image_url && (
+                    <div className="relative h-48 overflow-hidden">
+                      <img
+                        src={item.image_url}
+                        alt={item.title}
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+                    </div>
+                  )}
+                  <div className="p-6">
+                    <div className="flex items-center gap-2 mb-4 text-sm text-elida-gold">
+                      <Calendar className="h-4 w-4" />
+                      <time dateTime={item.created_at}>
+                        {format(new Date(item.created_at), 'PPP', { locale: lt })}
+                      </time>
+                    </div>
+                    <h3 className="text-xl font-playfair text-gray-900 mb-4">
+                      {item.title}
+                    </h3>
+                    <p className="text-gray-600 mb-6 line-clamp-3">
+                      {item.content}
+                    </p>
+                    <button
+                      onClick={() => {
+                        // You can implement a modal or a separate page for full news content
+                        console.log('Show full news:', item);
+                      }}
+                      className="inline-flex items-center gap-2 text-elida-gold hover:text-elida-accent transition-colors"
+                    >
+                      Skaityti daugiau
+                      <ArrowRight className="h-4 w-4" />
+                    </button>
+                  </div>
+                </motion.article>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Featured Products Section */}
       <FeaturedProducts />
