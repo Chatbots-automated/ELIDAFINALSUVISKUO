@@ -6,16 +6,16 @@ import { useStore } from '../store/useStore';
 import { useAuth } from '../context/AuthContext';
 import { createTransaction } from '../services/paymentService';
 import { sendOrderWebhook } from '../services/orderWebhookService';
+import { createOrder } from '../services/supabaseOrderService';
 
 interface FormData {
   firstName: string;
   lastName: string;
   email: string;
   phone: string;
-  address: string;
-  city: string;
-  postalCode: string;
   deliveryMethod: 'shipping' | 'pickup';
+  terminal: string;
+  terminalType: 'OMNIVA' | 'LP_EXPRESS' | 'DPD' | null;
 }
 
 export default function Checkout() {
@@ -29,10 +29,9 @@ export default function Checkout() {
     lastName: '',
     email: user?.email || '',
     phone: '',
-    address: '',
-    city: '',
-    postalCode: '',
-    deliveryMethod: 'shipping'
+    deliveryMethod: 'shipping',
+    terminal: '',
+    terminalType: null
   });
 
   if (cart.length === 0) {
@@ -68,7 +67,20 @@ export default function Checkout() {
   };
 
   const handleDeliveryMethodChange = (method: 'shipping' | 'pickup') => {
-    setForm(prev => ({ ...prev, deliveryMethod: method }));
+    setForm(prev => ({
+      ...prev,
+      deliveryMethod: method,
+      terminal: '',
+      terminalType: method === 'shipping' ? 'OMNIVA' : null
+    }));
+  };
+
+  const handleTerminalTypeChange = (type: 'OMNIVA' | 'LP_EXPRESS' | 'DPD') => {
+    setForm(prev => ({
+      ...prev,
+      terminalType: type,
+      terminal: '' // Reset terminal address when changing type
+    }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -80,7 +92,24 @@ export default function Checkout() {
       const orderRef = `ORD-${Date.now()}`;
       const baseUrl = window.location.origin;
 
-      // Prepare order data
+      // Create order in Supabase first
+      const supabaseOrder = await createOrder({
+        first_name: form.firstName,
+        last_name: form.lastName,
+        email: form.email,
+        phone: form.phone,
+        delivery_method: form.deliveryMethod,
+        terminal: form.terminal || null,
+        terminal_type: form.terminalType || null,
+        status: 'pending'
+      });
+
+      // Prepare shipping address based on delivery method
+      const shippingAddress = form.deliveryMethod === 'pickup' 
+        ? 'Atsiėmimas parduotuvėje: Vilniaus g. 23A, Panevėžys'
+        : `${form.terminalType} terminalas: ${form.terminal}`;
+
+      // Prepare order data for payment and webhook
       const orderData = {
         reference: orderRef,
         userId: user?.uid || 'anonymous',
@@ -95,11 +124,11 @@ export default function Checkout() {
         shipping: {
           method: form.deliveryMethod,
           name: `${form.firstName} ${form.lastName}`,
-          address: form.address,
-          city: form.city,
-          postalCode: form.postalCode,
+          address: shippingAddress,
           email: form.email,
-          phone: form.phone
+          phone: form.phone,
+          terminalType: form.terminalType,
+          terminal: form.terminal
         },
         status: 'created',
         createdAt: new Date().toISOString(),
@@ -184,7 +213,7 @@ export default function Checkout() {
                         <Truck className={`h-5 w-5 ${
                           form.deliveryMethod === 'shipping' ? 'text-elida-gold' : 'text-gray-400'
                         }`} />
-                        <span className="font-medium">Pristatymas</span>
+                        <span className="font-medium">Pristatymas į terminalą</span>
                       </div>
                       <p className="text-sm text-gray-500">2-3 darbo dienos</p>
                     </button>
@@ -208,6 +237,53 @@ export default function Checkout() {
                     </button>
                   </div>
                 </div>
+
+                {/* Terminal Selection for Shipping */}
+                {form.deliveryMethod === 'shipping' && (
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Pasirinkite kurjerį
+                      </label>
+                      <div className="grid grid-cols-3 gap-4">
+                        {(['OMNIVA', 'LP_EXPRESS', 'DPD'] as const).map((type) => (
+                          <button
+                            key={type}
+                            type="button"
+                            onClick={() => handleTerminalTypeChange(type)}
+                            className={`p-4 rounded-xl border text-center transition-all ${
+                              form.terminalType === type
+                                ? 'border-elida-gold bg-elida-gold/5'
+                                : 'border-gray-200 hover:border-elida-gold/50'
+                            }`}
+                          >
+                            <span className="font-medium">{type.replace('_', ' ')}</span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {form.terminalType && (
+                      <div>
+                        <label htmlFor="terminal" className="block text-sm font-medium text-gray-700 mb-2">
+                          Terminalo adresas *
+                        </label>
+                        <input
+                          type="text"
+                          id="terminal"
+                          name="terminal"
+                          value={form.terminal}
+                          onChange={handleInputChange}
+                          required
+                          placeholder="Įveskite terminalo adresą"
+                          className="w-full px-4 py-3 rounded-xl bg-white border border-gray-200 
+                                   focus:ring-2 focus:ring-elida-gold focus:border-transparent
+                                   placeholder-gray-400 transition-all duration-300"
+                        />
+                      </div>
+                    )}
+                  </div>
+                )}
 
                 {/* Contact Information */}
                 <div className="space-y-4">
@@ -293,71 +369,9 @@ export default function Checkout() {
                   </div>
                 </div>
 
-                {/* Shipping Address */}
-                {form.deliveryMethod === 'shipping' && (
-                  <div className="space-y-4">
-                    <h3 className="text-lg font-medium text-gray-900 flex items-center gap-2">
-                      <MapPin className="h-5 w-5 text-elida-gold" />
-                      Pristatymo adresas
-                    </h3>
-
-                    <div>
-                      <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-1">
-                        Adresas *
-                      </label>
-                      <input
-                        type="text"
-                        id="address"
-                        name="address"
-                        value={form.address}
-                        onChange={handleInputChange}
-                        required
-                        className="w-full px-4 py-3 rounded-xl bg-white border border-gray-200 
-                                 focus:ring-2 focus:ring-elida-gold focus:border-transparent
-                                 placeholder-gray-400 transition-all duration-300"
-                      />
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <label htmlFor="city" className="block text-sm font-medium text-gray-700 mb-1">
-                          Miestas *
-                        </label>
-                        <input
-                          type="text"
-                          id="city"
-                          name="city"
-                          value={form.city}
-                          onChange={handleInputChange}
-                          required
-                          className="w-full px-4 py-3 rounded-xl bg-white border border-gray-200 
-                                   focus:ring-2 focus:ring-elida-gold focus:border-transparent
-                                   placeholder-gray-400 transition-all duration-300"
-                        />
-                      </div>
-                      <div>
-                        <label htmlFor="postalCode" className="block text-sm font-medium text-gray-700 mb-1">
-                          Pašto kodas *
-                        </label>
-                        <input
-                          type="text"
-                          id="postalCode"
-                          name="postalCode"
-                          value={form.postalCode}
-                          onChange={handleInputChange}
-                          required
-                          className="w-full px-4 py-3 rounded-xl bg-white border border-gray-200 
-                                   focus:ring-2 focus:ring-elida-gold focus:border-transparent
-                                   placeholder-gray-400 transition-all duration-300"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                )}
-
                 <button
                   type="submit"
-                  disabled={loading}
+                  disabled={loading || (form.deliveryMethod === 'shipping' && !form.terminal)}
                   className="w-full py-4 bg-gradient-to-r from-elida-gold to-elida-accent text-white rounded-xl font-medium 
                            hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2
                            disabled:opacity-50 disabled:cursor-not-allowed"
