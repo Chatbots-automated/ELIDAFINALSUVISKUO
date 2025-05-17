@@ -80,7 +80,7 @@ export default function Subscriptions() {
                   <li>150 min – vos 0.56 € / min</li>
                 </ul>
 
-                <h3 className="text-xl font-medium text-gray-900 mt-8 mb-4">ABONOMENTAI GALIOJIMO LAIKO NETURI</h3>
+                <h3 className="text-xl font-medium text-gray-900 mt-8 mb-4">ABONEMENTAI GALIOJIMO LAIKO NETURI</h3>
               </div>
             </motion.div>
             

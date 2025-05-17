@@ -55,8 +55,13 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link to="/gallery" className="text-gray-400 hover:text-elida-gold transition-colors">
-                  Galerija
+                <Link to="/products" className="text-gray-400 hover:text-elida-gold transition-colors">
+                  Prekės
+                </Link>
+              </li>
+              <li>
+                <Link to="/subscriptions" className="text-gray-400 hover:text-elida-gold transition-colors">
+                  Abonementai
                 </Link>
               </li>
               <li>
