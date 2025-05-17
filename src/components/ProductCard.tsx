@@ -209,10 +209,12 @@ export default function ProductCard({ product }: ProductCardProps) {
                 e.stopPropagation();
                 handleAddToCart();
               }}
-              className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-elida-gold to-elida-accent text-white font-medium rounded-xl hover:shadow-lg focus:ring-4 focus:ring-elida-gold/50 transition-all duration-300"
+              className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-elida-gold to-elida-accent text-white rounded-xl font-medium 
+                       shadow-md hover:shadow-xl transition-all duration-300 relative overflow-hidden group"
             >
-              <ShoppingCart className="h-5 w-5" />
-              Į krepšelį
+              <div className="absolute inset-0 bg-white/10 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+              <ShoppingCart className="h-5 w-5 relative z-10" />
+              <span className="relative z-10">Į krepšelį</span>
             </motion.button>
           </div>
         </div>

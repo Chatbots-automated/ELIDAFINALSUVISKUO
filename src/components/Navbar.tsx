@@ -27,7 +27,6 @@ export default function Navbar() {
 
   const navLinks = [
     { name: 'Paslaugos', path: '/services' },
-    { name: 'Galerija', path: '/gallery' },
     { name: 'Prekės', path: '/products' },
     { name: 'Abonementai', path: '/subscriptions' },
     { name: 'Rezervuoti', path: '/booking' }

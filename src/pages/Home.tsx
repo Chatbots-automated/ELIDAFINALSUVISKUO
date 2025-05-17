@@ -176,6 +176,64 @@ export default function Home() {
         </motion.div>
       </section>
 
+      {/* News Section */}
+      {news.length > 0 && (
+        <section className="py-24 bg-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="text-center mb-16"
+            >
+              <h2 className="font-playfair text-4xl text-gray-900 mb-6">
+                Naujienos
+              </h2>
+              <div className="w-32 h-1 bg-gradient-to-r from-elida-gold to-elida-accent mx-auto"></div>
+            </motion.div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {news.map((item, index) => (
+                <motion.article
+                  key={item.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                  className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300"
+                >
+                  {item.image_url && (
+                    <div className="relative h-96 overflow-hidden">
+                      <img
+                        src={item.image_url}
+                        alt={item.title}
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+                    </div>
+                  )}
+                  <div className="p-6">
+                    <div className="flex items-center gap-2 mb-4 text-sm text-elida-gold">
+                      <Calendar className="h-4 w-4" />
+                      <time dateTime={item.created_at}>
+                        {format(new Date(item.created_at), 'PPP', { locale: lt })}
+                      </time>
+                    </div>
+                    <h3 className="text-xl font-playfair text-gray-900 mb-4">
+                      {item.title}
+                    </h3>
+                    <p className="text-gray-600 mb-6 line-clamp-3">
+                      {item.content}
+                    </p>
+                  </div>
+                </motion.article>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Features Section */}
       <section className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -257,7 +315,7 @@ export default function Home() {
             className="text-center mb-20"
           >
             <h2 className="font-playfair text-4xl md:text-5xl text-gray-900 mb-6">
-              Ką Sako Mūsų <span className="text-transparent bg-clip-text bg-luxury-gradient">Klientai</span>
+              KĄ SAKO MŪSŲ <span className="text-transparent bg-clip-text bg-luxury-gradient">KLIENTAI</span>
             </h2>
             <div className="w-32 h-1 bg-gradient-to-r from-elida-gold to-elida-accent mx-auto" />
           </motion.div>
@@ -312,122 +370,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* News Section */}
-      {news.length > 0 && (
-        <section className="py-24 bg-white">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="text-center mb-16"
-            >
-              <h2 className="font-playfair text-4xl text-gray-900 mb-6">
-                Naujienos
-              </h2>
-              <div className="w-32 h-1 bg-gradient-to-r from-elida-gold to-elida-accent mx-auto"></div>
-            </motion.div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {news.map((item, index) => (
-                <motion.article
-                  key={item.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                  className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300"
-                >
-                  {item.image_url && (
-                    <div className="relative h-48 overflow-hidden">
-                      <img
-                        src={item.image_url}
-                        alt={item.title}
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
-                    </div>
-                  )}
-                  <div className="p-6">
-                    <div className="flex items-center gap-2 mb-4 text-sm text-elida-gold">
-                      <Calendar className="h-4 w-4" />
-                      <time dateTime={item.created_at}>
-                        {format(new Date(item.created_at), 'PPP', { locale: lt })}
-                      </time>
-                    </div>
-                    <h3 className="text-xl font-playfair text-gray-900 mb-4">
-                      {item.title}
-                    </h3>
-                    <p className="text-gray-600 mb-6 line-clamp-3">
-                      {item.content}
-                    </p>
-                    <button
-                      onClick={() => {
-                        // You can implement a modal or a separate page for full news content
-                        console.log('Show full news:', item);
-                      }}
-                      className="inline-flex items-center gap-2 text-elida-gold hover:text-elida-accent transition-colors"
-                    >
-                      Skaityti daugiau
-                      <ArrowRight className="h-4 w-4" />
-                    </button>
-                  </div>
-                </motion.article>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
       {/* Featured Products Section */}
       <FeaturedProducts />
-
-      {/* CTA Section */}
-      <section className="py-24 bg-elida-beige">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="bg-white rounded-3xl shadow-xl overflow-hidden border border-elida-gold/10"
-          >
-            <div className="grid grid-cols-1 md:grid-cols-2">
-              <div className="p-16 flex items-center">
-                <div>
-                  <h2 className="font-playfair text-4xl text-gray-900 mb-8 leading-tight">
-                    Pasiruošę <span className="text-transparent bg-clip-text bg-luxury-gradient">Tobulam Įdegiui</span>?
-                  </h2>
-                  <p className="text-gray-600 mb-10 text-lg leading-relaxed">
-                    Rezervuokite savo laiką dabar ir atraskite profesionalų aptarnavimą bei aukščiausios kokybės įrangą.
-                  </p>
-                  <motion.div
-                    whileHover={{ scale: 1.05, boxShadow: "0 0 25px rgba(212, 175, 55, 0.3)" }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    <Link
-                      to="/booking"
-                      className="inline-block px-10 py-4 bg-gradient-to-r from-elida-gold to-elida-accent text-white rounded-full font-medium shadow-gold hover:shadow-gold-lg transition-all duration-300 text-lg"
-                    >
-                      Rezervuoti Vizitą
-                    </Link>
-                  </motion.div>
-                </div>
-              </div>
-              <div className="relative h-64 md:h-auto overflow-hidden">
-                <motion.img
-                  whileHover={{ scale: 1.05 }}
-                  transition={{ duration: 0.5 }}
-                  src="https://jp.lt/wp-content/uploads/2023/11/4T5A7204-1.jpg"
-                  alt="ÉLIDA Soliariumo Interjeras"
-                  className="absolute inset-0 w-full h-full object-cover"
-                />
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      </section>
     </div>
   );
 }
