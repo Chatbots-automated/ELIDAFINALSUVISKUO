@@ -78,7 +78,7 @@ export default function ProductCard({ product }: ProductCardProps) {
   return (
     <>
       <motion.div
-        className="group relative bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-500"
+        className="group relative bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-500 h-full flex flex-col"
         whileHover={{ scale: 1.02, y: -5 }}
         onHoverStart={() => setIsHovered(true)}
         onHoverEnd={() => setIsHovered(false)}
@@ -86,7 +86,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       >
         <div className="relative cursor-pointer">
           <motion.div
-            className="relative w-full h-80 overflow-hidden"
+            className="relative w-full h-[300px] overflow-hidden"
             animate={{ scale: isHovered ? 1.05 : 1 }}
             transition={{ duration: 0.4 }}
           >
@@ -159,8 +159,8 @@ export default function ProductCard({ product }: ProductCardProps) {
           </motion.div>
         </div>
 
-        <div className="p-8">
-          <div className="mb-6">
+        <div className="p-8 flex-1 flex flex-col">
+          <div className="mb-6 flex-1">
             <div className="flex items-center gap-3 mb-3">
               <div className="p-2 bg-elida-gold/10 rounded-lg">
                 <Shield className="h-6 w-6 text-elida-gold" />
@@ -172,51 +172,53 @@ export default function ProductCard({ product }: ProductCardProps) {
 
           <p className="text-gray-600 text-sm mb-8 line-clamp-2">{product.description}</p>
 
-          <div className="flex items-center justify-between mt-6 pt-6 border-t border-gray-100">
-            <div className="flex flex-col">
-              {user && !isSubscription ? (
-                <>
-                  <div className="flex items-center gap-2">
-                    <span className="text-2xl font-bold text-elida-gold">{formattedPrice}€</span>
-                    <User className="h-4 w-4 text-elida-gold" />
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <span className="text-sm text-gray-500 line-through">{originalPrice.toFixed(2)}€</span>
-                    <span className="text-sm text-green-600">-{discountPercentage}%</span>
-                  </div>
-                </>
-              ) : (
-                <>
-                  <div className="flex items-center gap-2">
-                    <span className="text-2xl font-bold text-gray-900">{originalPrice.toFixed(2)}€</span>
-                  </div>
-                  {!isSubscription && (
-                    <div className="flex items-center gap-2 mt-1 bg-elida-gold/10 px-2 py-1 rounded-lg">
+          <div className="mt-auto pt-6 border-t border-gray-100">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex flex-col">
+                {user && !isSubscription ? (
+                  <>
+                    <div className="flex items-center gap-2">
+                      <span className="text-2xl font-bold text-elida-gold">{formattedPrice}€</span>
                       <User className="h-4 w-4 text-elida-gold" />
-                      <div className="flex items-center gap-1">
-                        <span className="text-sm text-elida-gold font-medium line-through">{originalPrice.toFixed(2)}€</span>
-                        <span className="text-sm text-elida-gold font-medium">{formattedPrice}€</span>
-                        <span className="text-xs bg-elida-gold text-white px-2 py-0.5 rounded-full">-{discountPercentage}%</span>
-                      </div>
                     </div>
-                  )}
-                  {!isSubscription && <span className="text-xs text-gray-500 mt-1">Prisijungusiems vartotojams</span>}
-                </>
-              )}
+                    <div className="flex items-center gap-1">
+                      <span className="text-sm text-gray-500 line-through">{originalPrice.toFixed(2)}€</span>
+                      <span className="text-sm text-green-600">-{discountPercentage}%</span>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="flex items-center gap-2">
+                      <span className="text-2xl font-bold text-gray-900">{originalPrice.toFixed(2)}€</span>
+                    </div>
+                    {!isSubscription && (
+                      <div className="flex items-center gap-2 mt-1 bg-elida-gold/10 px-2 py-1 rounded-lg">
+                        <User className="h-4 w-4 text-elida-gold" />
+                        <div className="flex items-center gap-1">
+                          <span className="text-sm text-elida-gold font-medium line-through">{originalPrice.toFixed(2)}€</span>
+                          <span className="text-sm text-elida-gold font-medium">{formattedPrice}€</span>
+                          <span className="text-xs bg-elida-gold text-white px-2 py-0.5 rounded-full">-{discountPercentage}%</span>
+                        </div>
+                      </div>
+                    )}
+                    {!isSubscription && <span className="text-xs text-gray-500 mt-1">Prisijungusiems vartotojams</span>}
+                  </>
+                )}
+              </div>
             </div>
             <motion.button 
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
               onClick={(e) => {
                 e.stopPropagation();
                 handleAddToCart();
               }}
-              className="flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-elida-gold to-elida-accent text-white rounded-xl font-medium 
+              className="w-full flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-r from-elida-gold to-elida-accent text-white rounded-xl font-medium 
                        shadow-lg hover:shadow-xl transition-all duration-300 relative overflow-hidden group"
             >
               <div className="absolute inset-0 bg-white/10 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
               <ShoppingCart className="h-5 w-5 relative z-10" />
-              <span className="relative z-10 whitespace-nowrap">Į krepšelį</span>
+              <span className="relative z-10">Į krepšelį</span>
             </motion.button>
           </div>
         </div>
