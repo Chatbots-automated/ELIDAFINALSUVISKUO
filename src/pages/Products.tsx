@@ -20,7 +20,7 @@ export default function Products() {
             </h1>
             <div className="w-32 h-1 bg-gradient-to-r from-elida-gold to-elida-accent mx-auto mb-8"></div>
             <p className="text-lg text-gray-600 leading-relaxed">
-              Atraskite aukščiausios kokybės produktus ir abonementus jūsų tobulam įdegiui
+              Visas mūsų parduodamas prekes galite įsigyti fiziškai, adresu Vilniaus gatvė 23A Panevėžyje, “ÉLIDA soliariumai” studijoje
             </p>
           </motion.div>
         </div>

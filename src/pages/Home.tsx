@@ -314,7 +314,7 @@ export default function Home() {
             transition={{ duration: 0.6 }}
             className="text-center mb-20"
           >
-            <h2 className="font-playfair text-4xl md:text-5xl text-gray-900 mb-6">
+            <h2 className="font-playfair text-4xl text-gray-900 mb-6">
               KĄ SAKO MŪSŲ <span className="text-transparent bg-clip-text bg-luxury-gradient">KLIENTAI</span>
             </h2>
             <div className="w-32 h-1 bg-gradient-to-r from-elida-gold to-elida-accent mx-auto" />
